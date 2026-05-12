@@ -1,3 +1,8 @@
+<?php
+require_once __DIR__ . '/../../autoload.php';
+use Services\Connection;
+$connection = Connection::getConnection();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
