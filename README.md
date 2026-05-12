@@ -1,5 +1,5 @@
 ##Diagramme de classe
-<img width="1177" height="712" alt="image" src="https://github.com/user-attachments/assets/92bbe5c1-f0a8-4c80-93eb-ccd8448213c7" />
+<img width="1344" height="865" alt="image" src="https://github.com/user-attachments/assets/ddc55680-f125-4c96-a49c-f526185f10b2" />
 
 ##ERD Diagramme
 
