@@ -14,7 +14,7 @@ class Connection
         if(self::$pdo === null){
 
             // read .env
-            $env = parse_ini_file(".env");
+            $env = parse_ini_file("../../.env");
 
             $host = $env['DB_HOST'];
             $dbname = $env['DB_NAME'];
@@ -33,6 +33,7 @@ class Connection
                     PDO::ATTR_ERRMODE,
                     PDO::ERRMODE_EXCEPTION
                 );
+                echo "connection done ";
 
             }catch(PDOException $e){
 

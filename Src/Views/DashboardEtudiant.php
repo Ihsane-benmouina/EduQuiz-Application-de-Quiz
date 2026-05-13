@@ -1,3 +1,17 @@
+<?php
+use Services\Connection;
+include("../Services/Connection.php");
+$connection=Connection::getConnection();
+session_start();
+
+if (!isset($_SESSION['userid']) || $_SESSION['role'] != 2) {
+    header("Location: ../login.php");
+    exit();
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
