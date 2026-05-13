@@ -1,13 +1,33 @@
 <?php
 use Services\Connection;
+use Entities\Student; // Darori bach t-khdem b "new Student"
+
 include("../Services/Connection.php");
-$connection=Connection::getConnection();
+require_once "../Entities/User.php";
+require_once "../Entities/Student.php";
+
+$connection = Connection::getConnection();
 session_start();
 
-if (!isset($_SESSION['userid']) || $_SESSION['role'] != 2) {
-    header("Location: ../login.php");
-    exit();
+// Simuler la session (ila kan l-login mazal madayrach sa7bek)
+if (!isset($_SESSION['userid'])) {
+    $_SESSION['userid'] = 2; // ID dyal Ahmed f DB
+    $_SESSION['firstname'] = "Ahmed";
+    $_SESSION['lastname'] = "Test";
+    $_SESSION['email'] = "ahmed@student.com";
 }
+
+// Instanciation s7i7a
+$student = new Student(
+    $connection, 
+    $_SESSION['userid'], 
+    $_SESSION['firstname'], 
+    $_SESSION['lastname'], 
+    $_SESSION['email'], 
+    ''
+);
+
+$historique = $student->getDetailsStudent();
 ?>
 
 
@@ -46,7 +66,8 @@ if (!isset($_SESSION['userid']) || $_SESSION['role'] != 2) {
     <main class="flex-1 p-6 md:p-10 overflow-y-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-800">Mon Espace Étudiant</h2>
+                <h2 class="text-3xl font-bold text-slate-800"><?php echo "ID recherché: " . $_SESSION['userid'];
+                 ?></h2>
                 <p class="text-slate-500 mt-1">Prêt pour une nouvelle évaluation ?</p>
             </div>
             <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
@@ -93,39 +114,35 @@ if (!isset($_SESSION['userid']) || $_SESSION['role'] != 2) {
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-6 py-4">
-                            <p class="font-bold text-slate-700">Fondamentaux du HTML</p>
-                            <p class="text-xs text-slate-400">Formateur: Khadija M.</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-500 italic">10/05/2026</td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <span class="text-lg font-black text-green-600">18</span><span class="text-slate-400">/20</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-full uppercase">Validé</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all">Détails</button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-6 py-4 font-bold text-slate-700">
-                            <p class="font-bold text-slate-700">CSS Flexbox & Grid</p>
-                            <p class="text-xs text-slate-400 italic tracking-tighter transition-all tracking-tighter transition-all">Formateur: Khadija M.</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-500 italic italic">08/05/2026</td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <span class="text-lg font-black text-amber-500">11</span><span class="text-slate-400 italic">/20</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase italic tracking-tighter transition-all tracking-tighter transition-all">À Améliorer</span>
-                        </td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all italic">Détails</button>
-                        </td>
-                    </tr>
-                    </tbody>
+
+        <?php foreach ($historique as $row): ?>
+        <tr class="hover:bg-slate-50/50 transition">
+            <td class="px-6 py-4">
+                <p class="font-bold text-slate-700"><?php echo htmlspecialchars($row['title']); ?></p>
+                <p class="text-xs text-slate-400 font-medium tracking-tighter transition-all">Formateur: --</p>
+            </td>
+            <td class="px-6 py-4 text-sm text-slate-500 italic">
+                <?php echo date('d/m/Y', strtotime($row['attempt_date'])); ?>
+            </td>
+            <td class="px-6 py-4">
+                <span class="text-lg font-black <?php echo $row['score'] >= 10 ? 'text-green-600' : 'text-rose-500'; ?>">
+                    <?php echo $row['score']; ?>
+                </span><span class="text-slate-400">/20</span>
+            </td>
+            <td class="px-6 py-4 text-sm tracking-tighter transition-all">
+                <?php if ($row['status'] == 'completed'): ?>
+                    <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-full uppercase">Validé</span>
+                <?php else: ?>
+                    <span class="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase italic">En cours</span>
+                <?php endif; ?>
+            </td>
+            <td class="px-6 py-4">
+                <button class="text-indigo-600 hover:underline font-bold text-sm">Détails</button>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+
+</tbody>
                 </table>
             </div>
         </div>
