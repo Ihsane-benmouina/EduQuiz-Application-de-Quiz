@@ -33,7 +33,6 @@ class Connection
                     PDO::ATTR_ERRMODE,
                     PDO::ERRMODE_EXCEPTION
                 );
-                echo "connection done ";
 
             }catch(PDOException $e){
 

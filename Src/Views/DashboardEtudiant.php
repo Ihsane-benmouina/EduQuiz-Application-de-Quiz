@@ -1,6 +1,6 @@
 <?php
 use Services\Connection;
-use Entities\Student; // Darori bach t-khdem b "new Student"
+use Entities\Student; 
 
 include("../Services/Connection.php");
 require_once "../Entities/User.php";
@@ -9,15 +9,8 @@ require_once "../Entities/Student.php";
 $connection = Connection::getConnection();
 session_start();
 
-// Simuler la session (ila kan l-login mazal madayrach sa7bek)
-if (!isset($_SESSION['userid'])) {
-    $_SESSION['userid'] = 2; // ID dyal Ahmed f DB
-    $_SESSION['firstname'] = "Ahmed";
-    $_SESSION['lastname'] = "Test";
-    $_SESSION['email'] = "ahmed@student.com";
-}
 
-// Instanciation s7i7a
+
 $student = new Student(
     $connection, 
     $_SESSION['userid'], 
@@ -28,6 +21,19 @@ $student = new Student(
 );
 
 $historique = $student->getDetailsStudent();
+ if (isset($_POST["check"])) {
+    $acces_code = $_POST["quie_code"];
+    $sql = "SELECT * FROM quizzes where access_code=? ";
+    $stmt = $connection->prepare($sql);
+    $stmt->execute([$acces_code]);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if($result){
+        header("location:PasserQuiz.php");
+    }else{
+        echo" oerror";
+    }
+
+ }
 ?>
 
 
@@ -66,8 +72,7 @@ $historique = $student->getDetailsStudent();
     <main class="flex-1 p-6 md:p-10 overflow-y-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-slate-800"><?php echo "ID recherché: " . $_SESSION['userid'];
-                 ?></h2>
+                <h2 class="text-3xl font-bold text-slate-800">Mon Espace Étudiant</h2>
                 <p class="text-slate-500 mt-1">Prêt pour une nouvelle évaluation ?</p>
             </div>
             <div class="flex items-center gap-3 bg-white p-2 rounded-2xl border border-slate-200 shadow-sm">
@@ -75,7 +80,8 @@ $historique = $student->getDetailsStudent();
                     JD
                 </div>
                 <div class="pr-4">
-                    <p class="text-sm font-bold text-slate-800 text-sm">John Doe</p>
+                    <p class="text-sm font-bold text-slate-800 text-sm"> <?php echo "".$_SESSION["firstname"] ?>
+                </p>
                     <p class="text-[10px] text-slate-400 uppercase font-black">Apprenant</p>
                 </div>
             </div>
@@ -86,10 +92,10 @@ $historique = $student->getDetailsStudent();
                 <h3 class="text-2xl font-bold mb-4">Accéder à un Quiz</h3>
                 <p class="text-indigo-100 mb-8 font-medium">Entrez le code d'accès unique fourni par votre formateur pour commencer l'évaluation.</p>
 
-                <form class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" maxlength="8" placeholder="Ex: PHP-2026"
+                <form action="" method="POST" class="flex  flex-col sm:flex-row gap-4">
+                    <input type="text" name="quie_code" maxlength="8"  placeholder="Ex: PHP-2026"
                            class="flex-1 px-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-indigo-200 outline-none focus:ring-4 focus:ring-white/20 transition-all font-mono font-bold text-lg uppercase">
-                    <button class="bg-white text-indigo-600 px-10 py-4 rounded-2xl font-black hover:bg-indigo-50 transition-all shadow-lg active:scale-95">
+                    <button name="check" class="bg-white text-indigo-600 px-10 py-4 rounded-2xl font-black hover:bg-indigo-50 transition-all shadow-lg active:scale-95">
                         Rejoindre
                     </button>
                 </form>
@@ -114,7 +120,13 @@ $historique = $student->getDetailsStudent();
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-
+    <?php if (empty($historique)): ?>
+        <tr>
+            <td colspan="5" class="px-6 py-10 text-center text-slate-400 italic">
+                Vous n'avez passé aucun quiz pour le moment.
+            </td>
+        </tr>
+    <?php else: ?>
         <?php foreach ($historique as $row): ?>
         <tr class="hover:bg-slate-50/50 transition">
             <td class="px-6 py-4">
@@ -141,7 +153,7 @@ $historique = $student->getDetailsStudent();
             </td>
         </tr>
         <?php endforeach; ?>
-
+    <?php endif; ?>
 </tbody>
                 </table>
             </div>
