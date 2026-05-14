@@ -3,17 +3,23 @@
 namespace Services;
 
 use Repositories\AnswerRepository;
+use Repositories\QuizAttemptRepository;
 use Repositories\StudentAnswerRepository;
 
 class ScoreService
 {
     private AnswerRepository $answerRep;
     private StudentAnswerRepository $studentAnswerRep;
+    private QuizAttemptRepository $quizAttemptRepository;
 
-    public function __construct(AnswerRepository $answerRep,StudentAnswerRepository $studentAnswerRep)
-    {
-        $this->answerRep = $answerRep;
-        $this->studentAnswerRep = $studentAnswerRep;
+    public function __construct(
+        AnswerRepository $answerRepository,
+        StudentAnswerRepository $studentAnswerRepository,
+        QuizAttemptRepository $quizAttemptRepository
+    ) {
+        $this->answerRepository = $answerRepository;
+        $this->studentAnswerRepository = $studentAnswerRepository;
+        $this->quizAttemptRepository = $quizAttemptRepository;
     }
 
     public function calculateScore(array $studentAnswers): float
@@ -33,5 +39,12 @@ class ScoreService
         return $this
             ->studentAnswerRep
             ->getCorrectionsByAttempt($attemptId);
+    }
+
+    public function getQuizStatistics(int $quizId): array
+    {
+        return $this
+            ->quizAttemptRepository
+            ->getQuizResults($quizId);
     }
 }

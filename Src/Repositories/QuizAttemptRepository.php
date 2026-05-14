@@ -23,4 +23,36 @@ class QuizAttemptRepository
             $attempt->getIdQuiz()
         ]);
     }
+
+    public function getQuizResults(int $quizId): array
+    {
+        $sql = "
+        SELECT
+            u.firstname,
+            u.lastname,
+            q.title,
+            qa.score,
+            qa.attempt_date
+
+        FROM quiz_attempts qa
+
+        JOIN users u
+            ON qa.id_user = u.id
+
+        JOIN quizzes q
+            ON qa.id_quiz = q.id
+
+        WHERE qa.id_quiz = :quiz_id
+
+        ORDER BY qa.score DESC
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            'quiz_id' => $quizId
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
