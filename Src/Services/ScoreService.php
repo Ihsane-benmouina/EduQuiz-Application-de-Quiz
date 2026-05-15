@@ -17,8 +17,8 @@ class ScoreService
         StudentAnswerRepository $studentAnswerRepository,
         QuizAttemptRepository $quizAttemptRepository
     ) {
-        $this->answerRepository = $answerRepository;
-        $this->studentAnswerRepository = $studentAnswerRepository;
+        $this->answerRep = $answerRepository;
+        $this->studentAnswerRep = $studentAnswerRepository;
         $this->quizAttemptRepository = $quizAttemptRepository;
     }
 
@@ -46,5 +46,12 @@ class ScoreService
         return $this
             ->quizAttemptRepository
             ->getQuizResults($quizId);
+    }
+
+    public function getStudentAttempts(int $studentId): array
+    {
+        return $this
+            ->quizAttemptRepository
+            ->getAttemptsByStudent($studentId);
     }
 }

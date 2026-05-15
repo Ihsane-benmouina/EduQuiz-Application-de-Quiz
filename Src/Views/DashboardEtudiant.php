@@ -1,3 +1,30 @@
+<?php
+
+use Repositories\AnswerRepository;
+use Repositories\QuizAttemptRepository;
+use Repositories\StudentAnswerRepository;
+use Services\Connection;
+use Services\ScoreService;
+require_once '../../autoload.php';
+
+$pdo = Connection::getConnection();
+$answerRepository = new AnswerRepository($pdo);
+
+$studentAnswerRepository = new StudentAnswerRepository($pdo);
+
+$quizAttemptRepository = new QuizAttemptRepository($pdo);
+
+$scoreService = new ScoreService(
+        $answerRepository,
+        $studentAnswerRepository,
+        $quizAttemptRepository
+);
+
+$userId = 2;
+$attempts = $scoreService
+        ->getStudentAttempts($userId);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -79,38 +106,23 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-6 py-4">
-                            <p class="font-bold text-slate-700">Fondamentaux du HTML</p>
-                            <p class="text-xs text-slate-400">Formateur: Khadija M.</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-500 italic">10/05/2026</td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <span class="text-lg font-black text-green-600">18</span><span class="text-slate-400">/20</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-black rounded-full uppercase">Validé</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all">Détails</button>
-                        </td>
-                    </tr>
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="px-6 py-4 font-bold text-slate-700">
-                            <p class="font-bold text-slate-700">CSS Flexbox & Grid</p>
-                            <p class="text-xs text-slate-400 italic tracking-tighter transition-all tracking-tighter transition-all">Formateur: Khadija M.</p>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-slate-500 italic italic">08/05/2026</td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <span class="text-lg font-black text-amber-500">11</span><span class="text-slate-400 italic">/20</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase italic tracking-tighter transition-all tracking-tighter transition-all">À Améliorer</span>
-                        </td>
-                        <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                            <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all italic">Détails</button>
-                        </td>
-                    </tr>
+                        <?php foreach ($attempts as $attempt): ?>
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="px-6 py-4 font-bold text-slate-700">
+                                <p class="font-bold text-slate-700"><?= $attempt['title'] ?></p>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500 italic italic"><?= $attempt['attempt_date'] ?></td>
+                            <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
+                                <span class="text-lg font-black text-amber-500"><?= $attempt['score']?></span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase italic tracking-tighter transition-all tracking-tighter transition-all"><?= $attempt['status'] ?></span>
+                            </td>
+                            <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
+                                <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all italic">Détails</button>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
