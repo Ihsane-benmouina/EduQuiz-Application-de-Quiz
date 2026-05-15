@@ -47,7 +47,6 @@ CREATE TABLE quiz_attempts(
 );
 CREATE TABLE student_answers(
                                 id INT PRIMARY KEY AUTO_INCREMENT,
-                                is_correct BOOLEAN NOT NULL,
                                 attempt_id INT,
                                 question_id INT NOT NULL,
                                 answer_id INT NOT NULL,
