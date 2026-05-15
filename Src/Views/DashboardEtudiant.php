@@ -1,10 +1,11 @@
 <?php
 use Services\Connection;
 use Entities\Student; 
-
+use Entities\Question;
 include("../Services/Connection.php");
 require_once "../Entities/User.php";
 require_once "../Entities/Student.php";
+require_once "../Entities/Question.php";
 
 $connection = Connection::getConnection();
 session_start();
@@ -20,20 +21,27 @@ $student = new Student(
     ''
 );
 
+
+
 $historique = $student->getDetailsStudent();
  if (isset($_POST["check"])) {
     $acces_code = $_POST["quie_code"];
     $sql = "SELECT * FROM quizzes where access_code=? ";
     $stmt = $connection->prepare($sql);
-    $stmt->execute([$acces_code]);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     $stmt->execute([$acces_code]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
     if($result){
+        $_SESSION["id_quiz"]=$result["id"];
+
         header("location:PasserQuiz.php");
+        exit();
     }else{
         echo" oerror";
     }
 
  }
+
+
 ?>
 
 
@@ -52,7 +60,7 @@ $historique = $student->getDetailsStudent();
     <aside class="w-72 bg-white border-r border-slate-200 p-6 flex flex-col hidden md:flex">
         <div class="flex items-center gap-3 px-2 mb-10">
             <div class="w-8 h-8 bg-indigo-600 rounded-lg"></div>
-            <span class="text-xl font-bold text-slate-800 uppercase tracking-tight">EduQuiz</span>
+            <span class="text-xl font-bold text-slate-800 uppercase tracking-tight"></span>
         </div>
         <nav class="flex-1 space-y-2">
             <a href="#" class="flex items-center gap-3 px-4 py-3 bg-indigo-50 text-indigo-600 rounded-xl font-bold">

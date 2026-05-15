@@ -1,4 +1,28 @@
-<!DOCTYPE html>
+<?php
+session_start();
+require_once "../Entities/QuizAttempt.php";
+require_once "../Services/Connection.php";
+
+$connection = \Services\Connection::getConnection();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // 1. Jib l-IDs mn l-session
+    $userId = $_SESSION['userid']; 
+    $quizId = $_SESSION['id_quiz'];
+
+    // 2. Défini l-valeurs b NULL kif bghiti
+    $finalScore = null; 
+    $status = 'completed'; // awla null ila kant l-base de données kat-qbelha
+
+    // 3. Sift l-data
+    $attemptManager = new \Entities\Quiz_attempt($connection);
+    $isSaved = $attemptManager->saveAttempt($userId, $quizId, $finalScore, $status);
+
+    if ($isSaved) {
+        // Affichi l-page dyal "Fin" 3adi
+    }
+}
+?>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
