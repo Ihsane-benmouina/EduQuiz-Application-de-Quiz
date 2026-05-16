@@ -1,19 +1,22 @@
 <?php
 
-namespace Entities;
+class User {
 
-abstract class User
-{
-    private string $firstname;
-    private String $lastname;
-    private string $email;
-    private string $password;
+    protected $firstname;
+    protected $lastname;
+    protected $email;
+    protected $password;
 
-    public function __construct(string $firstname, string $lastname, string $email, string $password)
-    {
-        $this->firstname = $firstname;
-        $this->lastname = $lastname;
-        $this->email = $email;
-        $this->password = $password;
+    public function register() {
+        echo "User registered";
+    }
+
+    public function login() {
+        echo "User logged in";
+    }
+
+    public function logout() {
+        echo "User logged out";
     }
 }
+?>

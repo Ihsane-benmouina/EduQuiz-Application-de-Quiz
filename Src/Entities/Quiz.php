@@ -1,13 +1,21 @@
 <?php
-class Quiz {
-    public string $title;
-    public string $description;
-    public string $accessCode;
-    public array $questions = [];
+namespace App\Entities;
 
-    public function __construct(string $t, string $d) {
-        $this->title = $t;
-        $this->description = $d;
-        $this->accessCode = "QUIZ-" . rand(1000, 9999);
+
+class Quiz{
+    public $id;
+    public $title;
+    public $description;
+    public $access_code;
+    public $created_by;
+
+    public  function  __construct($title , $description,$access_code,$created_by){
+        $this->title=$title;
+        $this->description=$description;
+        $this->access_code=$access_code;
+        $this->created_by=$created_by;
     }
+
+
+
 }
