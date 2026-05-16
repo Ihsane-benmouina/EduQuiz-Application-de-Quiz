@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-// Force l'ID l'wahed l'user li 3ndek deja f table 'users'
 $_SESSION['user_id'] = 1;
-// Hna t-qd t-zid smiya ghir bach t-afficha f l'UI
 $_SESSION['firstname'] = "Ihsane";
 
 require_once __DIR__ . '/../../Config/Database.php';
@@ -133,8 +131,7 @@ $myQuizzes = $quizRepo->getAllQuizzesByFormateur($_SESSION['user_id']);
                                        class="text-indigo-600 hover:text-indigo-800 font-black text-sm uppercase tracking-tighter">
                                         Gérer Questions
                                     </a>
-                                    <button class="text-rose-400 hover:text-rose-600 font-bold text-sm">Supprimer</button>
-                                </div>
+                                    <a href="../../Public/delete_quiz_process.php?id=<?= $quiz['id'] ?>"   class="text-rose-400 hover:text-rose-600 font-bold text-sm">Supprimer</a>                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

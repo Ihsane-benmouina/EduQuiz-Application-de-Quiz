@@ -61,4 +61,18 @@ class QuizRepository {
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function deleteQuiz($quizId) {
+        $stmt = $this->db->prepare("DELETE FROM quizzes WHERE id = ?");
+        return $stmt->execute([$quizId]);
+    }
+
+    public function deleteQuestionById($questionId) {
+        $stmt = $this->db->prepare("DELETE FROM questions WHERE id = ?");
+        return $stmt->execute([$questionId]);
+    }
+
+    public function deleteAnswersByQuestion($questionId) {
+        $stmt = $this->db->prepare("DELETE FROM answers WHERE id_question = ?");
+        return $stmt->execute([$questionId]);
+    }
 }
