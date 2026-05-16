@@ -15,16 +15,28 @@
         </div>
         <div class="md:w-1/2 p-12">
             <h2 class="text-2xl font-bold text-slate-800 mb-6">Connexion</h2>
-            <form action="dashboard.php" class="space-y-5">
+
+            <?php if (isset($_GET['error'])): ?>
+                <div class="bg-rose-50 text-rose-600 p-4 rounded-xl text-sm font-semibold mb-4">
+                    Email ou mot de passe incorrect.
+                </div>
+            <?php endif; ?>
+            <?php if (isset($_GET['msg']) && $_GET['msg'] === 'registered'): ?>
+                <div class="bg-emerald-50 text-emerald-600 p-4 rounded-xl text-sm font-semibold mb-4">
+                    Inscription réussie ! Connectez-vous.
+                </div>
+            <?php endif; ?>
+
+            <form action="../../Public/process_login.php" method="POST" class="space-y-5">
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
-                    <input type="email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" placeholder="nom@ecole.com">
+                    <input type="email" name="email" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" placeholder="nom@ecole.com">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-1.5">Mot de passe</label>
-                    <input type="password" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
+                    <input type="password" name="password" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••">
                 </div>
-                <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all">Se Connecter</button>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all">Se Connecter</button>
             </form>
         </div>
     </div>

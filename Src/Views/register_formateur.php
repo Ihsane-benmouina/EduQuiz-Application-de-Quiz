@@ -9,9 +9,7 @@
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
 <div class="max-w-md w-full bg-white rounded-[2.5rem] p-10 shadow-xl shadow-slate-200 border border-slate-100">
-    <!-- Header Form -->
     <div class="text-center mb-10">
-        <!-- Icone Indigo bach tji m3a l'app -->
         <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-sm">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -21,13 +19,15 @@
         <p class="text-slate-500 text-sm font-medium mt-1">Créez vos quiz et suivez vos groupes</p>
     </div>
 
-    <form action="process_register.php" method="POST" class="space-y-5">
+    <form action="../../Public/process_register.php" method="POST" class="space-y-5">
         <input type="hidden" name="role" value="formateur">
-
         <div>
             <label class="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 ml-1">Identité Professionnelle</label>
             <div class="space-y-3">
-                <input type="text" name="name" required placeholder="Nom complet (ex: Pr. Alami)"
+                <input type="text" name="firstname" required placeholder="Prénom (ex: Tarik)"
+                       class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 outline-none transition-all font-medium placeholder:text-slate-300">
+
+                <input type="text" name="lastname" required placeholder="Nom (ex: Alami)"
                        class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:border-indigo-600 outline-none transition-all font-medium placeholder:text-slate-300">
 
                 <input type="text" name="specialty" required placeholder="Spécialité (ex: Algorithmique)"
