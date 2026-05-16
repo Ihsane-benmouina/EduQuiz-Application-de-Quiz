@@ -119,7 +119,10 @@ $attempts = $scoreService
                                 <span class="px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-black rounded-full uppercase italic tracking-tighter transition-all tracking-tighter transition-all"><?= $attempt['status'] ?></span>
                             </td>
                             <td class="px-6 py-4 italic tracking-tighter transition-all tracking-tighter transition-all">
-                                <button class="text-indigo-600 hover:underline font-bold text-sm italic tracking-tighter transition-all tracking-tighter transition-all italic">Détails</button>
+                                <a href="index.php?action=corrections&attempt_id=<?= $attempt['id'] ?>"
+                                   class="text-indigo-600 hover:underline font-bold text-sm">
+                                    Détails
+                                </a>
                             </td>
                         </tr>
                         <?php endforeach; ?>

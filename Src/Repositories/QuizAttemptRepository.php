@@ -85,4 +85,22 @@ class QuizAttemptRepository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAttemptDetails(int $attemptId): ?array
+    {
+        $sql = "
+        SELECT qa.score, q.title
+        FROM quiz_attempts qa
+        JOIN quizzes q ON qa.id_quiz = q.id
+        WHERE qa.id = :attempt_id
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'attempt_id' => $attemptId
+        ]);
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $result ?: null;
+    }
 }

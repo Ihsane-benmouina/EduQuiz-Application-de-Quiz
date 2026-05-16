@@ -24,38 +24,70 @@ class StudentAnswerRepository
         ]);
     }
 
-    public function getCorrectionsByAttempt(int $attemptId):array{
+    public function getCorrectionsByAttempt(int $attemptId): array
+    {
         $sql = "
         SELECT
+            q.id AS question_id,
             q.question_text,
 
-            student_answer.answer_text AS student_answer,
+            a.id AS answer_id,
+            a.answer_text,
+            a.is_correct,
 
-            correct_answer.answer_text AS correct_answer,
+            CASE 
+                WHEN sa.answer_id = a.id THEN 1
+                ELSE 0
+            END AS is_selected
 
-            correct_answer.is_correct
+        FROM questions q
 
-        FROM student_answers sa
+        JOIN answers a 
+            ON q.id = a.id_question
 
-        JOIN questions q
+        LEFT JOIN student_answers sa 
             ON sa.question_id = q.id
+            AND sa.attempt_id = :attempt_id
 
-        JOIN answers student_answer
-            ON sa.answer_id = student_answer.id
+        WHERE q.id IN (
+            SELECT question_id 
+            FROM student_answers 
+            WHERE attempt_id = :attempt_id
+        )
 
-        JOIN answers correct_answer
-            ON q.id = correct_answer.id_question
-            AND correct_answer.is_correct = 1
-
-        WHERE sa.attempt_id = ?
+        ORDER BY q.id, a.id
     ";
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->con->prepare($sql);
 
         $stmt->execute([
-            $attemptId
+            'attempt_id' => $attemptId
         ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // 🔥 VERY IMPORTANT: group by question
+        $result = [];
+
+        foreach ($rows as $row) {
+
+            $questionId = $row['question_id'];
+
+            if (!isset($result[$questionId])) {
+                $result[$questionId] = [
+                    'question_text' => $row['question_text'],
+                    'answers' => []
+                ];
+            }
+
+            $result[$questionId]['answers'][] = [
+                'answer_text' => $row['answer_text'],
+                'is_correct' => (bool)$row['is_correct'],
+                'is_selected' => (bool)$row['is_selected']
+            ];
+        }
+
+        return array_values($result);
     }
 
 }
